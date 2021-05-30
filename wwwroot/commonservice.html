@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="/lib/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function wcfServiceCall() {
+            var jsonObject = {};
+            jsonObject.ClientTag = 'UUNOLkV4cGVydEFwcA==';
+            jsonObject.DateTimeTicks = '';
+            jsonObject.RequestID = '';
+            jsonObject.ReturnType = 'json';
+            jsonObject.ResultAlias = [];
+            jsonObject.ServiceID = $("#txtServiceID").val();
+            jsonObject.Inputs = [];
+
+            jQuery.support.cors = true;
+
+            jsonObject.Inputs = JSON.parse($("#txtValue").val());
+
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: 'http://localhost:10040/' + $("#txtTransactionID").val(),
+                data: JSON.stringify(jsonObject),
+                error: function (request, status, error) {
+                    alert(request.responseText + " " + status + " " + error);
+                },
+                success: function (message) {
+                    $("#txtResult").val(JSON.stringify(message));
+                }
+            });
+
+        }
+
+    </script>
+</head>
+<body>
+    <div>요청전문</div>
+    TransactionID <input id="txtTransactionID" value="Service" /><br />
+    ServiceID <input id="txtServiceID" value="R03" /><br />
+    <textarea id="txtValue" style="width:100%; height:300px;">[[{"prop":"ApplicationID","val":"1"},{"prop":"BusinessID","val":"1"},{"prop":"CodeGroupID","val":"CMM001"}]]</textarea>
+    <input type="button" value="CommonService WCF 서비스 호출" onclick="wcfServiceCall()" />
+    <div>응답결과</div>
+    <textarea id="txtResult" style="width:100%; height:500px;"></textarea>
+</body>
+</html>

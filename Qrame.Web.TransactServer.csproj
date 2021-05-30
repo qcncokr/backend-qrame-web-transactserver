@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+		<TargetLatestRuntimePatch>false</TargetLatestRuntimePatch>
+		<RuntimeIdentifiers>win-x86;win-x64;linux-x64</RuntimeIdentifiers>
+		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+		<UserSecretsId>a6009fac-1fe6-4cc5-8c1f-c4291b81a92a</UserSecretsId>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<AssemblyName>Qrame.Web.TransactServer</AssemblyName>
+		<RootNamespace>Qrame.Web.TransactServer</RootNamespace>
+		<PackageId>Qcn.Qrame.Web.TransactServer</PackageId>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>qcncokr</Authors>
+		<Company>qcn</Company>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
+		<PackageReference Include="MessagePack" Version="2.2.85" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+		<PackageReference Include="ChoETL.JSON.NETStandard" Version="1.2.1.16" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Qcn.Qrame.Core" Version="1.0.0" />
+		<PackageReference Include="Qcn.Qrame.Core.Library" Version="1.0.1" />
+		<PackageReference Include="RestSharp" Version="106.11.7" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.4" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+        <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Threading" Version="4.3.0" />
+	</ItemGroup>
+
+    <ItemGroup>
+        <None Include="wwwroot\**" />
+        <None Include="BusinessContract\**" />
+        <Content Remove="BusinessContract\QAF\ZZW\TST010.json" />
+        <_WebToolingArtifacts Remove="Properties\PublishProfiles\Qrame.Web.TransactServer.pubxml" />
+        <None Update="wwwroot\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="BusinessContract\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>

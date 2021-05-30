@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="/lib/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function wcfServiceCall() {
+            var jsonObject = JSON.parse($("#txtValue").val());
+
+            $.ajax({
+                type: 'POST',
+                contentType: 'qrame/json-transact; charset=utf-8',
+                url: 'http://localhost:9020/api/Transaction',
+                data: JSON.stringify(jsonObject),
+                error: function (request, status, error) {
+                    $("#txtResult").val(request.responseText + " " + status + " " + error);
+                },
+                success: function (message) {
+                    $("#txtResult").val(message);
+                }
+            });
+
+        }
+
+    </script>
+</head>
+<body>
+    <div>요청전문</div>
+    <textarea id="txtValue" style="width:100%; height:300px;">{
+  "AccessTokenID": "4BFF90C2-4ED9-4A6C-B74C-11517823CFFD",
+  "Action": "REPLY|ONEWAY|DUPLEX",
+  "ClientTag": "호스트명|사용자ID|QRAME_VERSION",
+  "LoadOptions":[{
+   "Key":"QAFCMD0001",
+   "Value":"Json"
+  }],
+  "RequestID": "48F01DEE-77BA-4E67-8EE6-D9F9008AFAA0",
+  "Version": "001",
+  "DAT": {
+    "REQ_INPUT": [
+      [
+        {
+          "REQ_FIELD_ID": "ProjectUserID",
+          "REQ_FIELD_DAT": "junchul"
+        },
+        {
+          "REQ_FIELD_ID": "WorkstationName",
+          "REQ_FIELD_DAT": "DESKTOP-UVUFG09"
+        }
+      ]
+    ],
+    "REQ_INPUT_CNT": [1],
+    "REQ_TX_MAP_ID": ""
+  },
+  "SH": {
+    "CLNT_IPAD": "1.1.3.55",
+    "CLNT_MAC": "80CE62390647",
+    "ENV_INF_DSCD": "D",
+    "FST_TLM_REQ_DTM": "20190423091227183",
+    "FST_TMS_SYS_CD": "QAF",
+    "GLBL_ID": "4F9436A3-A7A9-4409-B7A3-779435CADB54",
+    "GLBL_ID_PRG_SRNO": 1,
+    "INTF_ID": "SYSTEMINTERFACEID",
+    "LANG_DSCD": "KO",
+    "MD_KDCD": "WIN",
+    "MSG_OCC_SYS_CD": "",
+    "RSP_RST_DSCD": "",
+    "RSP_SYS_CD": "",
+    "TLM_ENCY_DSCD": "N",
+    "TLM_REQ_DTM": "20190423091719757",
+    "TLM_RSP_DTM": "",
+    "TMS_SYS_CD": "",
+    "TMS_SYS_NODE_ID": "HOSTID"
+  },
+  "TCI": [],
+  "TH": {
+    "BIZ_ID": "DSO",
+    "EXNK_DSCD": "E",
+    "FUNC_CD": "R01",
+    "LQTY_DAT_PRC_DIS": "N",
+    "MSK_NTGT_TRN_YN": "Y",
+    "OPR_NO": "AAA0190001",
+    "PGM_ID": "QAF",
+    "RLPE_SQCN": 1,
+    "SMLT_TRN_DSCD": "N",
+    "TRM_BRNO": "",
+    "TRN_CD": "0001",
+    "TRN_SCRN_CD": "",
+    "TRN_TRM_NO": "000000AA0001"
+  }
+}</textarea>
+    <input type="button" value="WCF 서비스 호출" onclick="wcfServiceCall()" />
+    <div>응답결과</div>
+    <textarea id="txtResult" style="width:100%; height:500px;"></textarea>
+</body>
+</html>

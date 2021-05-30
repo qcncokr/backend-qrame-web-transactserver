@@ -1,0 +1,180 @@
+﻿{
+	"ApplicationID": "QAF",
+	"ProjectID": "ZZW",
+	"TransactionProjectID": "ZZD",
+	"TransactionID": "TST010",
+	"Description": "테스트 > 데이터베이스 기본 거래 확인",
+	"ModifiedDate": "2020-06-10 00:00:00",
+	"Services": [
+		{
+			"ServiceID": "G01",
+			"Authorize": false,
+			"ReturnType": "Json",
+			"TransactionType": "F",
+			"TransactionScope": false,
+			"Inputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"TestValues": [],
+					"DefaultValues": [],
+					"Type": "Row",
+					"BaseFieldMappings": [],
+					"ParameterHandling": "Rejected"
+				}
+			],
+			"Outputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"Type": "Form"
+				}
+			]
+		},
+		{
+			"ServiceID": "G02",
+			"ReturnType": "Json",
+			"TransactionType": "S",
+			"TransactionScope": false,
+			"SequentialOption": [
+				{
+					"TransactionProjectID": "ZZD",
+					"TransactionID": "ZZA010",
+					"ServiceID": "L01",
+					"TransactionType": "D",
+					"ServiceInputFields": [ 0 ],
+					"ServiceOutputs": [
+						{
+							"ModelID": "Dynamic",
+							"Fields": [
+							],
+							"Type": "Form"
+						}
+					],
+					"ResultHandling": "FieldMapping", // ResultSet, FieldMapping
+					"TargetInputFields": [ 0 ], // FieldMapping은 무조건 ServiceOutputs이 Form 이어야 한다
+					"ResultOutputFields": []
+				},
+				{
+					"TransactionProjectID": "ZZD",
+					"TransactionID": "TST010",
+					"ServiceID": "L01",
+					"TransactionType": "D",
+					"ServiceInputFields": [ 0 ],
+					"ServiceOutputs": [
+						{
+							"ModelID": "Dynamic",
+							"Fields": [
+							],
+							"Type": "Grid"
+						}
+					],
+					"ResultHandling": "ResultSet", // ResultSet, FieldMapping
+					"TargetInputFields": [],
+					"ResultOutputFields": [ 0 ] // ResultSet은 ServiceOutputs와 Outputs 타입과 호환이 되어야 한다
+				}
+			],
+			"Inputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"TestValues": [],
+					"DefaultValues": [],
+					"Type": "Row",
+					"BaseFieldMappings": [],
+					"ParameterHandling": "Rejected"
+				}
+			],
+			"Outputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"Type": "Grid"
+				}
+			]
+		},
+		{
+			"ServiceID": "L01",
+			"ReturnType": "Json",
+			"TransactionType": "D",
+			"TransactionScope": false,
+			"Inputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"TestValues": [],
+					"DefaultValues": [],
+					"Type": "Row",
+					"BaseFieldMappings": [],
+					"ParameterHandling": "Rejected"
+				}
+			],
+			"Outputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"Type": "Grid"
+				}
+			]
+		},
+		{
+			"ServiceID": "L02",
+			"ReturnType": "Json",
+			"TransactionType": "D",
+			"TransactionScope": false,
+			"Inputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"TestValues": [],
+					"DefaultValues": [],
+					"Type": "Row",
+					"BaseFieldMappings": [],
+					"ParameterHandling": "Rejected"
+				}
+			],
+			"Outputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"Type": "Grid"
+				}
+			]
+		},
+		{
+			"ServiceID": "G03",
+			"ReturnType": "Xml",
+			"TransactionType": "D",
+			"TransactionScope": false,
+			"Inputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"TestValues": [],
+					"DefaultValues": [],
+					"Type": "Row",
+					"BaseFieldMappings": [],
+					"ParameterHandling": "Rejected"
+				}
+			],
+			"Outputs": [
+				{
+					"ModelID": "Dynamic",
+					"Fields": [
+					],
+					"Type": "Form"
+				}
+			]
+		}
+	],
+	"Models": []
+}
