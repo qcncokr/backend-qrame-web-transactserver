@@ -35,6 +35,7 @@ namespace Qrame.Web.TransactServer
 		public static bool IsExceptionDetailText = false;
 		public static bool IsSwaggerUI = false;
 		public static string WithOrigins = "";
+		public static bool IsCodeDataCache = false;
 		public static int CodeDataCacheTimeout = 20;
 		public static string AuthorizationKey = "";
 		public static List<PublicTransaction> PublicTransactions = new List<PublicTransaction>();

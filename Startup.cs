@@ -26,7 +26,7 @@ using System.Reflection;
 
 namespace Qrame.Web.TransactServer
 {
-    public class Startup
+	public class Startup
 	{
 		private string startTime = null;
 		private int processID = 0;
@@ -68,6 +68,7 @@ namespace Qrame.Web.TransactServer
 			StaticConfig.IsExceptionDetailText = bool.Parse(appSettings["IsExceptionDetailText"].ToString());
 			StaticConfig.IsSwaggerUI = bool.Parse(appSettings["IsSwaggerUI"].ToString());
 			StaticConfig.WithOrigins = appSettings["WithOrigins"].ToString();
+			StaticConfig.IsCodeDataCache = bool.Parse(appSettings["IsCodeDataCache"].ToString());
 			StaticConfig.CodeDataCacheTimeout = appSettings["CodeDataCacheTimeout"] == null ? 20 : int.Parse(appSettings["CodeDataCacheTimeout"].ToString());
 			StaticConfig.AuthorizationKey = StaticConfig.SystemCode + StaticConfig.RunningEnvironment + StaticConfig.HostName;
 			StaticConfig.IsConfigure = true;
