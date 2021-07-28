@@ -26,7 +26,7 @@ using System.Reflection;
 
 namespace Qrame.Web.TransactServer
 {
-	public class Startup
+    public class Startup
 	{
 		private string startTime = null;
 		private int processID = 0;
@@ -67,7 +67,16 @@ namespace Qrame.Web.TransactServer
 			StaticConfig.TransactionLogFilePath = appSettings["TransactionLogFilePath"].ToString();
 			StaticConfig.IsExceptionDetailText = bool.Parse(appSettings["IsExceptionDetailText"].ToString());
 			StaticConfig.IsSwaggerUI = bool.Parse(appSettings["IsSwaggerUI"].ToString());
-			StaticConfig.WithOrigins = appSettings["WithOrigins"].ToString();
+
+			string withOrigins = appSettings["WithOrigins"].ToString();
+			if (string.IsNullOrEmpty(withOrigins) == false)
+			{
+				foreach (string item in withOrigins.Split(","))
+				{
+					StaticConfig.WithOrigins.Add(item.Trim());
+				}
+			}
+
 			StaticConfig.IsCodeDataCache = bool.Parse(appSettings["IsCodeDataCache"].ToString());
 			StaticConfig.CodeDataCacheTimeout = appSettings["CodeDataCacheTimeout"] == null ? 20 : int.Parse(appSettings["CodeDataCacheTimeout"].ToString());
 			StaticConfig.AuthorizationKey = StaticConfig.SystemCode + StaticConfig.RunningEnvironment + StaticConfig.HostName;
@@ -130,20 +139,11 @@ namespace Qrame.Web.TransactServer
 
 			services.AddCors(options =>
 			{
-				List<string> withOrigins = new List<string>();
-				if (string.IsNullOrEmpty(StaticConfig.WithOrigins) == false)
-				{
-					foreach (string item in StaticConfig.WithOrigins.Split(","))
-					{
-						withOrigins.Add(item.Trim());
-					}
-				}
-
 				options.AddDefaultPolicy(
 				builder => builder
 					.AllowAnyHeader()
 					.AllowAnyMethod()
-					.WithOrigins(withOrigins.ToArray())
+					.WithOrigins(StaticConfig.WithOrigins.ToArray())
 					.SetIsOriginAllowedToAllowWildcardSubdomains()
 				);
 			});

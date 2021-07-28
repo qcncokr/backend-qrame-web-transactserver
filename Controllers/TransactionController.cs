@@ -41,7 +41,7 @@ using Qrame.Core.Library;
 
 namespace Qrame.Web.TransactServer.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	[EnableCors()]
 	public class TransactionController : ControllerBase
@@ -243,7 +243,7 @@ namespace Qrame.Web.TransactServer.Controllers
 		/// </example>
 		[HttpGet("CacheKeys")]
 		public ActionResult CacheKeys()
-		{
+        {
 			ActionResult result = NotFound();
 			string authorizationKey = Request.Headers["AuthorizationKey"];
 			if (string.IsNullOrEmpty(authorizationKey) == true || StaticConfig.AuthorizationKey != authorizationKey)
@@ -265,25 +265,25 @@ namespace Qrame.Web.TransactServer.Controllers
 			}
 
 			return result;
-		}
+        }
 
-		private List<string> GetMemoryCacheKeys()
-		{
-			var field = typeof(MemoryCache).GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
-			var collection = field.GetValue(memoryCache) as ICollection;
-			var items = new List<string>();
-			if (collection != null)
-			{
-				foreach (var item in collection)
-				{
-					var methodInfo = item.GetType().GetProperty("Key");
-					var val = methodInfo.GetValue(item);
-					items.Add(val.ToString());
-				}
-			}
+        private List<string> GetMemoryCacheKeys()
+        {
+            var field = typeof(MemoryCache).GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+            var collection = field.GetValue(memoryCache) as ICollection;
+            var items = new List<string>();
+            if (collection != null)
+            {
+                foreach (var item in collection)
+                {
+                    var methodInfo = item.GetType().GetProperty("Key");
+                    var val = methodInfo.GetValue(item);
+                    items.Add(val.ToString());
+                }
+            }
 
-			return items;
-		}
+            return items;
+        }
 
 		/// <summary>
 		/// 지정된 조건에 해당하는 거래 정보를 확인합니다
@@ -531,7 +531,7 @@ namespace Qrame.Web.TransactServer.Controllers
 			{
 				#region 입력 기본값 구성
 
-				if (request.TH.DAT_FMT == "")
+				if (string.IsNullOrEmpty(request.TH.DAT_FMT) == true)
 				{
 					request.TH.DAT_FMT = "J";
 				}
@@ -576,7 +576,7 @@ namespace Qrame.Web.TransactServer.Controllers
 						var reqJArray = ToJson(DecryptInputData(REQ_INPUTDATA, request.TH.CRYPTO_DSCD));
 						var reqInputs = JsonConvert.DeserializeObject<List<REQ_INPUT>>(reqJArray.ToString());
 
-						foreach (var reqInput in reqInputs)
+                        foreach (var reqInput in reqInputs)
 						{
 							if (string.IsNullOrEmpty(reqInput.REQ_FIELD_ID) == true)
 							{
@@ -589,8 +589,7 @@ namespace Qrame.Web.TransactServer.Controllers
 				}
 				else if (request.TH.DAT_FMT == "J")
 				{
-					if (request.TH.CRYPTO_DSCD == "C")
-					{
+					if (request.TH.CRYPTO_DSCD == "C") {
 						if (request.DAT.REQ_INPUT == null)
 						{
 							request.DAT.REQ_INPUT = new List<List<REQ_INPUT>>();
@@ -797,7 +796,7 @@ namespace Qrame.Web.TransactServer.Controllers
 							return Content(JsonConvert.SerializeObject(response), "application/json");
 						}
 					}
-					else
+					else if (StaticConfig.UseApiAuthorize == true)
 					{
 						if (token.IndexOf(".") == -1)
 						{
@@ -902,7 +901,7 @@ namespace Qrame.Web.TransactServer.Controllers
 							}
 						}
 					}
-				}
+                }
 
 				TransactionObject transactionObject = new TransactionObject();
 				transactionObject.LoadOptions = request.LoadOptions;
@@ -1292,7 +1291,8 @@ namespace Qrame.Web.TransactServer.Controllers
 						response.SH.TLM_RSP_DTM = DateTime.Now.ToString("yyyyMMddhhmmddsss");
 						response.ResponseID = string.Concat(StaticConfig.SystemCode, StaticConfig.HostName, request.SH.ENV_INF_DSCD, DateTime.Now.ToString("yyyyMMddhhmmddsss"));
 						response.Acknowledge = AcknowledgeType.Success;
-						response.TH.SMLT_TRN_DSCD = transactionInfo.ReturnType;
+						ExecuteDynamicTypeObject executeDynamicTypeObject = (ExecuteDynamicTypeObject)Enum.Parse(typeof(ExecuteDynamicTypeObject), transactionInfo.ReturnType);
+						response.TH.SMLT_TRN_DSCD = ((int)executeDynamicTypeObject).ToString();
 
 						if (response.TH.DAT_FMT == "T")
 						{
@@ -1303,18 +1303,17 @@ namespace Qrame.Web.TransactServer.Controllers
 								JToken RES_DAT = RES_OUTPUT.RES_DAT as JToken;
 								if (RES_DAT != null)
 								{
-									if (RES_DAT is JObject)
-									{
+									if (RES_DAT is JObject) {
 										var names = RES_DAT.ToObject<JObject>().Properties().Select(p => p.Name).ToList();
-										foreach (var item in names)
-										{
+									    foreach (var item in names)
+									    {
 											var jtoken = RES_DAT[item];
 											string data = jtoken.ToString();
 											if (data.StartsWith('"') == true)
 											{
 												RES_DAT[item] = "\"" + data;
 											}
-
+									
 											if (data.EndsWith('"') == true)
 											{
 												RES_DAT[item] = RES_DAT[item].ToString() + "\"";
@@ -1335,7 +1334,7 @@ namespace Qrame.Web.TransactServer.Controllers
 												{
 													jtoken[item] = "\"" + data.ToString();
 												}
-
+									
 												if (data.ToString().EndsWith('"') == true)
 												{
 													jtoken[item] = jtoken[item].ToString() + "\"";
@@ -1345,27 +1344,33 @@ namespace Qrame.Web.TransactServer.Controllers
 									}
 
 									string meta = resultMeta[i];
-									var jsonReader = new StringReader(RES_DAT.ToString());
-									using (ChoJSONReader choJSONReader = new ChoJSONReader(jsonReader))
+									if (RES_DAT.HasValues == true)
 									{
-										var stringBuilder = new StringBuilder();
-										using (var choCSVWriter = new ChoCSVWriter(stringBuilder, new ChoCSVRecordConfiguration()
+										var jsonReader = new StringReader(RES_DAT.ToString());
+										using (ChoJSONReader choJSONReader = new ChoJSONReader(jsonReader))
 										{
-											Delimiter = "｜",
-											EOLDelimiter = "↵"
-										}).WithFirstLineHeader().QuoteAllFields(false))
-										{
-											choCSVWriter.Write(choJSONReader);
-										}
+											var stringBuilder = new StringBuilder();
+											using (var choCSVWriter = new ChoCSVWriter(stringBuilder, new ChoCSVRecordConfiguration()
+											{
+												Delimiter = "｜",
+												EOLDelimiter = "↵"
+											}).WithFirstLineHeader().QuoteAllFields(false))
+											{
+												choCSVWriter.Write(choJSONReader);
+											}
 
-										if (request.TH.CRYPTO_DSCD == "C")
-										{
-											RES_OUTPUT.RES_DAT = LZStringHelper.CompressToBase64(meta + "＾" + stringBuilder.ToString().Replace("\"\"", "\""));
+											if (request.TH.CRYPTO_DSCD == "C")
+											{
+												RES_OUTPUT.RES_DAT = LZStringHelper.CompressToBase64(meta + "＾" + stringBuilder.ToString().Replace("\"\"", "\""));
+											}
+											else
+											{
+												RES_OUTPUT.RES_DAT = meta + "＾" + stringBuilder.ToString().Replace("\"\"", "\"");
+											}
 										}
-										else
-										{
-											RES_OUTPUT.RES_DAT = meta + "＾" + stringBuilder.ToString().Replace("\"\"", "\"");
-										}
+									}
+									else {
+										RES_OUTPUT.RES_DAT = meta + "＾";
 									}
 								}
 
@@ -1425,21 +1430,20 @@ namespace Qrame.Web.TransactServer.Controllers
 			return Content(JsonConvert.SerializeObject(response), "application/json");
 		}
 
-		private static string DecryptInputData(string inputData, string decrptCode)
-		{
+		private static string DecryptInputData(string inputData, string decrptCode) {
 			string result = "";
-			switch (decrptCode)
-			{
+            switch (decrptCode)
+            {
 				case "C":
 					result = LZStringHelper.DecompressFromBase64(inputData);
 					break;
-				default:
+                default:
 					result = inputData;
 					break;
-			}
+            }
 
 			return result;
-		}
+        }
 
 		private ApplicationResponse SequentialResultContractValidation(ApplicationResponse applicationResponse, TransactionRequest request, TransactionResponse response, TransactionInfo transactionInfo, TransactionObject transactionObject, List<Model> businessModels, List<ModelOutputContract> outputContracts)
 		{
@@ -2473,8 +2477,7 @@ namespace Qrame.Web.TransactServer.Controllers
 							dynamicObjects.Add(dynamicObject);
 						}
 					}
-					else
-					{
+					else {
 						Qrame.Core.Library.MessageContract.DataObject.DynamicObject dynamicObject = new Qrame.Core.Library.MessageContract.DataObject.DynamicObject();
 						dynamicObject.QueryID = string.Concat(transactionObject.TransactionID, "|", transactionObject.ServiceID, i.ToString().PadLeft(2, '0'));
 						if (StaticConfig.IsQueryIDHashing == true)
@@ -2634,15 +2637,14 @@ namespace Qrame.Web.TransactServer.Controllers
 			return responseObject;
 		}
 
-		private JArray ToJson(string val)
-		{
+		private JArray ToJson(string val) {
 			JArray result = new JArray();
 
 			char delimeter = '｜';
 			char newline = '↵';
 			var lines = val.Split(newline);
 			var headers = lines[0].Split(delimeter);
-
+			
 			for (int i = 0; i < headers.Length; i++)
 			{
 				headers[i] = headers[i].Replace(@"(^[\s""]+|[\s""]+$)", "");
@@ -2674,6 +2676,10 @@ namespace Qrame.Web.TransactServer.Controllers
 			else if (val == "false" || val == "False" || val == "FALSE")
 			{
 				result = false;
+			}
+			else if (val.Length > 1 && val.IndexOf('.') == -1 && val.StartsWith('0') == true)
+			{
+				result = val;
 			}
 			else if (Regex.IsMatch(val, @"^\s*-?(\d*\.?\d+|\d+\.?\d*)(e[-+]?\d+)?\s*$") == true)
 			{

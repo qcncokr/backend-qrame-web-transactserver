@@ -34,7 +34,7 @@ namespace Qrame.Web.TransactServer
 		public static bool UseApiAuthorize = false;
 		public static bool IsExceptionDetailText = false;
 		public static bool IsSwaggerUI = false;
-		public static string WithOrigins = "";
+		public static List<string> WithOrigins = new List<string>();
 		public static bool IsCodeDataCache = false;
 		public static int CodeDataCacheTimeout = 20;
 		public static string AuthorizationKey = "";

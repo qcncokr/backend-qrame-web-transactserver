@@ -138,6 +138,7 @@ namespace Qrame.Web.TransactServer
 				string[] configFiles = Directory.GetFiles(StaticConfig.BusinessContractBasePath, "*.json", SearchOption.AllDirectories);
 				lock (businessContracts)
 				{
+					businessContracts.Clear();
 					foreach (string configFile in configFiles)
 					{
 						try
